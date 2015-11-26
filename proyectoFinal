@@ -1,0 +1,220 @@
+import java.util.*;
+
+/**
+ *
+ * @author demorgan94
+ */
+public class Proyecto_Final {
+
+    static Scanner input = null;
+    static String[] huesped = new String[100];
+    static int[] costo = new int[100];
+    static int[] habitacion = new int[100];
+
+    public static void main(String[] args) {
+        //muestra el menu
+        muestraMenu();
+    }
+
+    public static void muestraMenu() {
+        input = new Scanner(System.in);
+        int seleccion;
+
+        do {
+            System.out.println("--------------------Menu Principal--------------------");
+            System.out.println("\n");
+            System.out.println("1. Registrar llegada del Huésped");
+            System.out.println("2. Registrar salida del Huésped");
+            System.out.println("3. Consultar huésped y monto de una habitación");
+            System.out.println("4. Imprimir total de habitaciones ocupadas/desocupadas");
+            System.out.println("5. Imprimir mapa del hotel");
+            System.out.println("6. Terminar\n");
+            System.out.println("------------------------------------------------------");
+            System.out.println("\n\nEliga la opción en la que desea entrar: ");
+            seleccion = input.nextInt();
+
+            switch (seleccion) {
+                case 1:
+                    registrarLlegada();
+                    break;
+                case 2:
+                    registrarSalida();
+                    break;
+                case 3:
+                    consulta();
+                    break;
+                case 4:
+                    habitacionesOcupadas();
+                    break;
+                case 5:
+                    mapaHotel();
+                    break;
+                case 6:
+                    //El usuario desea salir
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Opción no válida, ingrese una del 1 al 6");
+                    break;
+            }
+        } while (seleccion != 6);
+    }
+
+    public static void registrarLlegada() {
+        String respuesta = "s";
+        boolean continuar = true;
+        int pos = 0;
+
+        do {
+            for (int i = 0; i < huesped.length; i++) {
+                if (huesped[i] == null) {
+                    pos = i;
+                    break;
+                }
+            }
+            if (pos < 0) {
+                System.out.println("No se encuentran habitaciones disponibles en este momento!");
+            } else {
+                System.out.println("Ingrese el nombre del huesped: ");
+                input.nextLine();
+                huesped[pos] = input.nextLine();
+                System.out.println("Ingrese el precio del cuarto: ");
+                costo[pos] = input.nextInt();
+                System.out.println("--------------------------------------------------------");
+                System.out.println("Huésped: " + huesped[pos]);
+                System.out.println("Costo: $" + costo[pos]);
+                System.out.println("Habitación asignada: " + (pos + 1));
+            }
+            System.out.println("¿Desea continuar con otro huésped(s/n)?: ");
+            respuesta = input.next();
+            if ("s".equals(respuesta)) {
+                continue;
+            } else {
+                continuar = false;
+            }
+        } while (continuar);
+    }
+
+    public static void registrarSalida() {
+        int pos, num;
+        String respuesta, resp;
+        boolean continuar = true;
+
+        do {
+            for (int i = 0; i < huesped.length; i++) {
+                pos = i;
+            }
+            System.out.println("Ingrese el número de habitación: ");
+            num = input.nextInt();
+            num = num - 1;
+            if (num > (huesped.length - 1) || huesped[num] == null) {
+                System.out.println("La habitación proporcionada no se encuentra asignada");
+            } else {
+                System.out.println("Huésped: " + huesped[num]);
+                System.out.println("Costo: $" + costo[num]);
+                System.out.println("Desea continuar con la liberación de la habitación(s/n)?: ");
+                respuesta = input.next();
+                if ("s".equals(respuesta)) {
+                    huesped[num] = null;
+                    costo[num] = 0;
+                } else {
+                    continuar = false;
+                }
+            }
+            System.out.println("Desea eliminar el registro de otro huesped(s/n)?: ");
+            resp = input.next();
+            if ("s".equals(resp)) {
+                continue;
+            } else {
+                continuar = false;
+            }
+        } while (continuar);
+    }
+
+    public static void consulta() {
+        int pos, num;
+        boolean continuar = true;
+        String resp;
+
+        do {
+            for (int i = 0; i < huesped.length; i++) {
+                pos = i;
+            }
+            System.out.println("Ingrese el número de habitación: ");
+            num = input.nextInt();
+            num = num - 1;
+            if (num > (huesped.length - 1) || huesped[num] == null) {
+                System.out.println("La habitación proporcionada no se encuentra asignada");
+            } else {
+                System.out.println("Huésped: " + huesped[num]);
+                System.out.println("Costo: $" + costo[num]);
+                System.out.println("Desea consultar otro huésped(s/n)?: ");
+                resp = input.next();
+                if ("s".equals(resp)) {
+                    continue;
+                } else {
+                    continuar = false;
+                }
+            }
+        } while (continuar);
+    }
+
+    public static void habitacionesOcupadas() {
+        String enter = null;
+        int info = -1, des = 0, ocu = 0;
+
+        for (int i = 0; i < huesped.length; i++) {
+            info = i;
+            if (huesped[info] == null) {
+                des++;
+            } else {
+                ocu++;
+            }
+        }
+        System.out.println("Habitaciones Ocupadas: " + ocu);
+        System.out.println("Habitaciones Desocupadas: " + des);
+        System.out.println("Presione <Enter> para volver a menu principal");
+        enter = input.nextLine();
+        while (enter != null) {
+            if ("".equals(enter)) {
+                if (input.hasNextLine()) {
+                    enter = input.nextLine();
+                    muestraMenu();
+                } else {
+                    enter = null;
+                    muestraMenu();
+                }
+            }
+        }
+    }
+
+    public static void mapaHotel() {
+        int num = 0;
+        String enter = null;
+
+        System.out.println("Habitación\tNombre del Huésped\tCosto Habitación");
+        System.out.println("----------\t------------------\t----------------");
+        for (int i = 0; i < huesped.length; i++) {
+            num = i;
+            if (huesped[num] == null) {
+                System.out.println((num+1) + "\t\t" + "*Disponible*");
+            } else {
+                System.out.println((num+1) + "\t\t" + huesped[num] + "\t\t" + "$" + costo[num]);
+            }
+        }
+        System.out.println("Presione <Enter> para volver a menu principal");
+        enter = input.nextLine();
+        while (enter != null) {
+            if ("".equals(enter)) {
+                if (input.hasNextLine()) {
+                    enter = input.nextLine();
+                    muestraMenu();
+                } else {
+                    enter = null;
+                    muestraMenu();
+                }
+            }
+        }
+    }
+
+}
